@@ -40,11 +40,11 @@ This script requires the AzureStack Powershell modules (with dependent Az module
 The script will take all ARM Resource Group templates within the provided folder, and then execute a deployment for each using the parameter values provided.
 
 ### Example Execution ###
-`.\DeployARM.ps1 -IdentityProvider 'ADFS' -ArmEndpoint 'https://management.region.azurestack.fqdn' -RegionName 'region' -AdminUsername 'testadmin' -AdminPassword ('<PASSWORD> | ConvertTo-SecureString -AsPlainText -Force) -Verbose`
+`.\DeployARM.ps1 -IdentityProvider 'ADFS' -ArmEndpoint 'https://management.region.azurestack.fqdn' -RegionName 'region' -AdminUsername 'testadmin' -AdminPassword ('<PASSWORD>' | ConvertTo-SecureString -AsPlainText -Force) -Verbose`
 
 or
 
-`.\DeployARM.ps1 -IdentityProvider 'AzureAD' -ArmEndpoint 'https://management.region.azurestack.fqdn' -AADTenantName 'myAADTenant.onmicrosoft.com' -RegionName 'region' -AdminUsername 'testadmin' -AdminPassword ('<PASSWORD> | ConvertTo-SecureString -AsPlainText -Force) -Verbose`
+`.\DeployARM.ps1 -IdentityProvider 'AzureAD' -ArmEndpoint 'https://management.region.azurestack.fqdn' -AADTenantName 'myAADTenant.onmicrosoft.com' -RegionName 'region' -AdminUsername 'testadmin' -AdminPassword ('<PASSWORD>' | ConvertTo-SecureString -AsPlainText -Force) -Verbose`
 
 ### Execution Paramters ###
 - OutputTemplatePath - Required: FALSE - Default Value: '.\Output'
