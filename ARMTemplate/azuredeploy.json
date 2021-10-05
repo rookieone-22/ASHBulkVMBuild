@@ -1,0 +1,128 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "apiProfile": "2018-03-01-hybrid",
+  "parameters": {
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      },
+      "defaultValue": "vmadmin1"
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the Administrator account of the new VMs. Default value is subscription id"
+      },
+      "defaultValue": "[concat('Subscription#',substring(resourcegroup().id,15,36))]"
+    }
+  },
+  "variables": {
+    "storageAccountName": "[toLower(concat('sa',uniqueString(resourceGroup().id),'diag'))]",
+    "storageAccountType": "Standard_LRS",
+    "virtualNetworkResourceGroup": "UPDATE",
+    "virtualNetworkName": "UPDATE",
+    "subnetName": "UPDATE",
+    "subnetID": "[concat(resourceId(variables('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks',variables('virtualNetworkName')),'/subnets/',variables('subnetName'))]",
+    "location": "[resourceGroup().location]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "[variables('storageAccountType')]"
+      },
+      "kind": "Storage"
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "UPDATE",
+      "location": "[variables('location')]",
+      "dependsOn": [],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnetID')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Compute/disks",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "name": "UPDATE",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "creationData": {
+          "createOption": "Empty"
+        },
+        "diskSizeGB": 10
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "UPDATE",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', 'UPDATE')]",
+        "[resourceId('Microsoft.Compute/disks/', 'UPDATE')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_A1"
+        },
+        "osProfile": {
+          "computerName": "replace",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "UPDATE",
+            "offer": "UPDATE",
+            "sku": "UPDATE",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "lun": 1,
+              "name": "replace",
+              "createOption": "attach",
+              "managedDisk": {
+                "id": "[resourceId('Microsoft.Compute/disks/', 'replace')]"
+              }
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','test')]"
+            }
+          ]
+        },
+        "diagnosticsProfile": { 
+          "bootDiagnostics": { 
+            "enabled": true, 
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.blob]"
+          }
+        }
+      }
+    }
+  ]
+}

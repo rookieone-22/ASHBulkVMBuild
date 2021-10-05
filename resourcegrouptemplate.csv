@@ -1,0 +1,4 @@
+vmName,imagePublisher,imageOffer,imageSku,vmSize,dataDisks
+testVM01,MicrosoftWindowsServer,WindowsServer,2019-Datacenter,Standard_A1_v2,10|10|100
+testVM02,MicrosoftWindowsServer,WindowsServer,2016-Datacenter,Standard_A1_v2,
+testVM03,MicrosoftWindowsServer,WindowsServer,2019-Datacenter,Standard_A1_v2,100
